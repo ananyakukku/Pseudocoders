@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StackIt - Ask Question</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Include Quill rich text editor -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <style>
+        /* Global Styles */
+        :root {
+            --primary: #3a7bd5;
+            --secondary: #00d2ff;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        a {
+            text-decoration: none;
+            color: var(--primary);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-links a {
+            color: white;
+            font-weight: 500;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            background-color: rgba(255,255,255,0.2);
+        }
+        
+        /* Ask Question Form Styles */
+        .ask-form-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .form-title {
+            font-size: 24px;
+            margin-bottom: 25px;
+            color: var(--dark);
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        /* Rich Text Editor Styles */
+        .editor-container {
+            height: 300px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        /* Toolbar customization to match screenshot */
+        .ql-toolbar {
+            border-radius: 4px 4px 0 0 !important;
+            border-bottom: none !important;
+        }
+        
+        .ql-container {
+            border-radius: 0 0 4px 4px !important;
+        }
+        
+        /* Tags Input Styles */
+        .tag-input-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            border: 1px solid #ddd;
+            padding: 8px;
+            border-radius: 4px;
+            min-height: 50px;
+        }
+        
+        .tag {
+            background-color: #e0f2fe;
+            color: #0369a1;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .tag-remove {
+            margin-left: 8px;
+            cursor: pointer;
+        }
+        
+        .tag-input {
+            flex-grow: 1;
+            border: none;
+            padding: 8px;
+            min-width: 100px;
+        }
+        
+        .tag-input:focus {
+            outline: none;
+        }
+        
+        /* Submit Button */
+        .submit-btn {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+        
+        .submit-btn:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <i class="fas fa-layer-group"></i>
+                <span>StackIt</span>
+            </div>
+            
+            <nav class="nav-links">
+                <a href="stackit.html">Home</a>
+                <a href="ask.html">Questions</a>
+                <a href="question.html">Tags</a>
+                <a href="users.html">Users</a>
+            </nav>
+        </div>
+    </header>
+    
+    <main class="container">
+        <div class="ask-form-container">
+            <h1 class="form-title">Ask Question</h1>
+            <form id="askQuestionForm">
+                <!-- Title Input -->
+                <div class="form-group">
+                    <label for="questionTitle" class="form-label">Title</label>
+                    <input type="text" id="questionTitle" class="form-control" 
+                           placeholder="Be specific and imagine you're asking a question to another person" 
+                           required>
+                </div>
+                
+                <!-- Description/Rich Text Editor -->
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <div id="editor-container" class="editor-container"></div>
+                    <input type="hidden" id="questionDescription" name="description">
+                </div>
+                
+                <!-- Tags Input -->
+                <div class="form-group">
+                    <label class="form-label">Tags</label>
+                    <div class="tag-input-container" id="tagContainer">
+                        <input type="text" class="tag-input" id="tagInput" placeholder="Add tags (e.g., react, javascript)">
+                    </div>
+                    <small>Add up to 5 tags to describe what your question is about.</small>
+                </div>
+                
+                <button type="submit" class="submit-btn">Submit</button>
+            </form>
+        </div>
+    </main>
+
+    <!-- Include Quill JS -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script>
+        // Initialize Quill Rich Text Editor with toolbar matching the screenshot
+        const quill = new Quill('#editor-container', {
+            theme: 'snow',
+            modules: {
+                toolbar: [
+                    ['bold', 'italic', 'strike'],  // B I S
+                    [{ 'header': 1 }, { 'header': 2 }],  // H H
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],  // U O
+                    ['blockquote', 'code-block'],  // Q B
+                    ['link', 'image'],  // E S
+                    ['clean']  // F
+                ]
+            },
+            placeholder: 'Include all the details someone would need to answer your question...',
+        });
+
+        // Sample tags data
+        const availableTags = [
+            'javascript', 'react', 'python', 'java', 'html', 
+            'css', 'nodejs', 'express', 'mongodb', 'jwt',
+            'authentication', 'frontend', 'backend', 'docker', 'git'
+        ];
+        
+        // DOM Elements
+        const tagInput = document.getElementById('tagInput');
+        const tagContainer = document.getElementById('tagContainer');
+        const form = document.getElementById('askQuestionForm');
+        
+        // Track selected tags
+        let selectedTags = [];
+        
+        // Tag input functionality
+        tagInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ',') {
+                e.preventDefault();
+                const tag = tagInput.value.trim().toLowerCase();
+                if (tag && !selectedTags.includes(tag) && availableTags.includes(tag)) {
+                    if (selectedTags.length < 5) {
+                        addTag(tag);
+                        tagInput.value = '';
+                    } else {
+                        alert('You can only add up to 5 tags');
+                    }
+                }
+            }
+            
+            if (e.key === 'Backspace' && tagInput.value === '' && selectedTags.length > 0) {
+                removeTag(selectedTags[selectedTags.length - 1]);
+            }
+        });
+        
+        function addTag(tag) {
+            selectedTags.push(tag);
+            renderTags();
+        }
+        
+        function removeTag(tag) {
+            selectedTags = selectedTags.filter(t => t !== tag);
+            renderTags();
+        }
+        
+        function renderTags() {
+            // Clear existing tags
+            const tags = tagContainer.querySelectorAll('.tag');
+            tags.forEach(tag => tag.remove());
+            
+            // Add current tags
+            selectedTags.forEach(tag => {
+                const tagElement = document.createElement('span');
+                tagElement.className = 'tag';
+                tagElement.innerHTML = `
+                    ${tag}
+                    <span class="tag-remove" data-tag="${tag}">&times;</span>
+                `;
+                tagContainer.insertBefore(tagElement, tagInput);
+            });
+            
+            // Add event listeners to remove buttons
+            document.querySelectorAll('.tag-remove').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const tagToRemove = e.target.getAttribute('data-tag');
+                    removeTag(tagToRemove);
+                });
+            });
+        }
+        
+        // Form submission
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Get the HTML content from Quill
+            const description = document.querySelector('.ql-editor').innerHTML;
+            
+            // Validate form
+            if (!questionTitle.value.trim()) {
+                alert('Please enter a question title');
+                return;
+            }
+            
+            if (!description || description === '<p><br></p>') {
+                alert('Please enter a question description');
+                return;
+            }
+            
+            if (selectedTags.length === 0) {
+                alert('Please add at least one tag');
+                return;
+            }
+            
+            // Prepare data for submission
+            const questionData = {
+                title: questionTitle.value.trim(),
+                body: description,
+                tags: selectedTags
+            };
+            
+            // In a real application, you would send this to your backend
+            console.log('Submitting question:', questionData);
+            alert('Question submitted successfully! (This is a demo)');
+            
+            // Reset form
+            form.reset();
+            quill.root.innerHTML = '<p><br></p>';
+            selectedTags = [];
+            renderTags();
+        });
+    </script>
+</body>
+</html>

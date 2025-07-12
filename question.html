@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StackIt - Question Detail</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Global Styles */
+        :root {
+            --primary: #3a7bd5;
+            --secondary: #00d2ff;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        a {
+            text-decoration: none;
+            color: var(--primary);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-links a {
+            color: white;
+            font-weight: 500;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            background-color: rgba(255,255,255,0.2);
+        }
+        
+        /* Question Detail Styles */
+        .question-detail-container {
+            max-width: 800px;
+            margin: 30px auto;
+        }
+        
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+        
+        .question-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+        
+        .question-meta {
+            display: flex;
+            gap: 15px;
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .question-author {
+            font-weight: 500;
+            color: var(--primary);
+        }
+        
+        .question-body {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            line-height: 1.7;
+        }
+        
+        .question-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+        
+        .tag {
+            background-color: #e0f2fe;
+            color: #0369a1;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        /* Answers Section */
+        .answers-section {
+            margin-top: 40px;
+        }
+        
+        .answers-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .answer-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .answer-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+        
+        .answer-author {
+            font-weight: 500;
+            color: var(--primary);
+        }
+        
+        .answer-body {
+            line-height: 1.7;
+            margin-bottom: 15px;
+        }
+        
+        /* Answer Form */
+        .answer-form {
+            background-color: white;
+            border-radius: 8px;
+            padding: 30px;
+            margin-top: 40px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .answer-form-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            min-height: 150px;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+        
+        .submit-btn:hover {
+            opacity: 0.9;
+        }
+        
+        /* Vote Controls */
+        .vote-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .vote-count {
+            font-weight: bold;
+            min-width: 20px;
+            text-align: center;
+        }
+        
+        .vote-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #bdc3c7;
+            font-size: 18px;
+            transition: color 0.3s;
+        }
+        
+        .vote-btn:hover {
+            color: var(--primary);
+        }
+        
+        .vote-btn.upvoted {
+            color: var(--success);
+        }
+        
+        .vote-btn.downvoted {
+            color: var(--danger);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <i class="fas fa-layer-group"></i>
+                <span>StackIt</span>
+            </div>
+            
+            <nav class="nav-links">
+                <a href="stackit.html">Home</a>
+                <a href="ask.html">Questions</a>
+                <a href="question.html">Tags</a>
+                <a href="users.html">Users</a>
+            </nav>
+        </div>
+    </header>
+    
+    <main class="container">
+        <div class="question-detail-container">
+            <!-- Question Section -->
+            <div class="question-header">
+                <h1 class="question-title">How to join 2 columns in a dataset to make a separate column in SQL</h1>
+                <div class="vote-controls">
+                    <button class="vote-btn"><i class="fas fa-arrow-up"></i></button>
+                    <span class="vote-count">12</span>
+                    <button class="vote-btn"><i class="fas fa-arrow-down"></i></button>
+                </div>
+            </div>
+            
+            <div class="question-meta">
+                <span>Asked by <span class="question-author">Vibrant Flamingo</span></span>
+                <span>2 days ago</span>
+                <span>Viewed 145 times</span>
+            </div>
+            
+            <div class="question-body">
+                <p>I do not know the code for it as I am a beginner. As an example what I need to do is like there is a column 1 containing First name, and column 2 consists of last name I want a column to combine.</p>
+                
+                <div class="question-tags">
+                    <span class="tag">sql</span>
+                    <span class="tag">database</span>
+                    <span class="tag">join</span>
+                </div>
+            </div>
+            
+            <!-- Answers Section -->
+            <div class="answers-section">
+                <div class="answers-header">
+                    <h2>2 Answers</h2>
+                </div>
+                
+                <!-- Answer 1 -->
+                <div class="answer-card">
+                    <div class="answer-meta">
+                        <span>Answered by <span class="answer-author">Rishabh Sharma</span></span>
+                        <span>1 day ago</span>
+                    </div>
+                    
+                    <div class="answer-body">
+                        <p>In SQL, you have several options to concatenate columns:</p>
+                        <ul>
+                            <li>The <code>||</code> Operator (in some databases like PostgreSQL)</li>
+                            <li>The <code>+</code> Operator (in SQL Server)</li>
+                            <li>The <code>CONCAT</code> Function (standard across most databases)</li>
+                        </ul>
+                        <p>Example with CONCAT:</p>
+                        <pre><code>SELECT CONCAT(first_name, ' ', last_name) AS full_name FROM users;</code></pre>
+                    </div>
+                    
+                    <div class="vote-controls">
+                        <button class="vote-btn upvoted"><i class="fas fa-arrow-up"></i></button>
+                        <span class="vote-count">8</span>
+                        <button class="vote-btn"><i class="fas fa-arrow-down"></i></button>
+                    </div>
+                </div>
+                
+                <!-- Answer 2 -->
+                <div class="answer-card">
+                    <div class="answer-meta">
+                        <span>Answered by <span class="answer-author">SQL Expert</span></span>
+                        <span>5 hours ago</span>
+                    </div>
+                    
+                    <div class="answer-body">
+                        <p>For MySQL specifically, you can also use the CONCAT_WS function which handles NULL values better:</p>
+                        <pre><code>SELECT CONCAT_WS(' ', first_name, last_name) AS full_name FROM users;</code></pre>
+                        <p>The WS stands for "With Separator" and it will only add the space between non-NULL values.</p>
+                    </div>
+                    
+                    <div class="vote-controls">
+                        <button class="vote-btn"><i class="fas fa-arrow-up"></i></button>
+                        <span class="vote-count">3</span>
+                        <button class="vote-btn"><i class="fas fa-arrow-down"></i></button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Answer Form -->
+            <div class="answer-form">
+                <h2 class="answer-form-title">Submit Your Answer</h2>
+                <form id="answerForm">
+                    <div class="form-group">
+                        <label for="answerBody" class="form-label">Your Answer</label>
+                        <textarea id="answerBody" class="form-control" placeholder="Write your answer here..." required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">Post Your Answer</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Voting functionality
+        document.querySelectorAll('.vote-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const isUpvote = this.querySelector('.fa-arrow-up');
+                const voteCount = this.parentElement.querySelector('.vote-count');
+                
+                if (isUpvote) {
+                    this.classList.toggle('upvoted');
+                    // Remove downvoted from sibling if exists
+                    const downvoteBtn = this.parentElement.querySelector('.fa-arrow-down').parentElement;
+                    if (downvoteBtn.classList.contains('downvoted')) {
+                        downvoteBtn.classList.remove('downvoted');
+                    }
+                } else {
+                    this.classList.toggle('downvoted');
+                    // Remove upvoted from sibling if exists
+                    const upvoteBtn = this.parentElement.querySelector('.fa-arrow-up').parentElement;
+                    if (upvoteBtn.classList.contains('upvoted')) {
+                        upvoteBtn.classList.remove('upvoted');
+                    }
+                }
+                
+                // Update vote count (simplified for demo)
+                if (this.classList.contains('upvoted')) {
+                    voteCount.textContent = parseInt(voteCount.textContent) + 1;
+                } else if (this.classList.contains('downvoted')) {
+                    voteCount.textContent = parseInt(voteCount.textContent) - 1;
+                }
+            });
+        });
+        
+        // Answer form submission
+        document.getElementById('answerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const answerBody = document.getElementById('answerBody').value.trim();
+            
+            if (!answerBody) {
+                alert('Please enter your answer');
+                return;
+            }
+            
+            // In a real application, you would send this to your backend
+            console.log('Submitting answer:', answerBody);
+            alert('Answer submitted successfully! (This is a demo)');
+            
+            // Reset form
+            this.reset();
+            
+            // For demo purposes, we'll add the new answer to the page
+            const answersSection = document.querySelector('.answers-section');
+            const answerCountHeader = document.querySelector('.answers-header h2');
+            const currentCount = parseInt(answerCountHeader.textContent.match(/\d+/)[0]);
+            
+            const newAnswer = document.createElement('div');
+            newAnswer.className = 'answer-card';
+            newAnswer.innerHTML = `
+                <div class="answer-meta">
+                    <span>Answered by <span class="answer-author">You</span></span>
+                    <span>Just now</span>
+                </div>
+                <div class="answer-body">
+                    ${answerBody.replace(/\n/g, '<br>')}
+                </div>
+                <div class="vote-controls">
+                    <button class="vote-btn"><i class="fas fa-arrow-up"></i></button>
+                    <span class="vote-count">0</span>
+                    <button class="vote-btn"><i class="fas fa-arrow-down"></i></button>
+                </div>
+            `;
+            
+            answersSection.insertBefore(newAnswer, document.querySelector('.answer-form'));
+            answerCountHeader.textContent = `${currentCount + 1} Answers`;
+            
+            // Add event listener to new vote buttons
+            newAnswer.querySelectorAll('.vote-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const isUpvote = this.querySelector('.fa-arrow-up');
+                    const voteCount = this.parentElement.querySelector('.vote-count');
+                    
+                    if (isUpvote) {
+                        this.classList.toggle('upvoted');
+                        const downvoteBtn = this.parentElement.querySelector('.fa-arrow-down').parentElement;
+                        if (downvoteBtn.classList.contains('downvoted')) {
+                            downvoteBtn.classList.remove('downvoted');
+                        }
+                    } else {
+                        this.classList.toggle('downvoted');
+                        const upvoteBtn = this.parentElement.querySelector('.fa-arrow-up').parentElement;
+                        if (upvoteBtn.classList.contains('upvoted')) {
+                            upvoteBtn.classList.remove('upvoted');
+                        }
+                    }
+                    
+                    if (this.classList.contains('upvoted')) {
+                        voteCount.textContent = parseInt(voteCount.textContent) + 1;
+                    } else if (this.classList.contains('downvoted')) {
+                        voteCount.textContent = parseInt(voteCount.textContent) - 1;
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

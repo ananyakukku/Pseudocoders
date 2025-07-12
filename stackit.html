@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StackIt - Q&A Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Global Styles */
+        :root {
+            --primary: #3a7bd5;
+            --secondary: #00d2ff;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        a {
+            text-decoration: none;
+            color: var(--primary);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-links a {
+            color: white;
+            font-weight: 500;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            background-color: rgba(255,255,255,0.2);
+        }
+        
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .notification-bell {
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .notification-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+        
+        .btn-primary {
+            background-color: white;
+            color: var(--primary);
+        }
+        
+        .btn-primary:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid white;
+            color: white;
+        }
+        
+        .btn-outline:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+        
+        /* Main Content Styles */
+        main {
+            padding: 30px 0;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .page-title {
+            font-size: 28px;
+            color: var(--dark);
+        }
+        
+        /* Question List Styles */
+        .question-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .question-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .question-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .question-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+        
+        .question-meta {
+            display: flex;
+            gap: 15px;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        
+        .question-author {
+            font-weight: 500;
+            color: var(--primary);
+        }
+        
+        .question-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+        
+        .tag {
+            background-color: #e0f2fe;
+            color: #0369a1;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .question-body {
+            margin-bottom: 15px;
+            line-height: 1.7;
+        }
+        
+        .question-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+        
+        .vote-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .vote-count {
+            font-weight: bold;
+            min-width: 20px;
+            text-align: center;
+        }
+        
+        .vote-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #bdc3c7;
+            font-size: 18px;
+            transition: color 0.3s;
+        }
+        
+        .vote-btn:hover {
+            color: var(--primary);
+        }
+        
+        .vote-btn.upvoted {
+            color: var(--success);
+        }
+        
+        .vote-btn.downvoted {
+            color: var(--danger);
+        }
+        
+        .answer-count {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #7f8c8d;
+        }
+        
+        /* Ask Question Form */
+        .ask-form {
+            background-color: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .tag-input-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            border: 1px solid #ddd;
+            padding: 8px;
+            border-radius: 4px;
+        }
+        
+        .tag-input {
+            flex-grow: 1;
+            border: none;
+            padding: 5px;
+            min-width: 100px;
+        }
+        
+        .tag-input:focus {
+            outline: none;
+        }
+        
+        /* Rich Text Editor Simulation */
+        .rich-text-toolbar {
+            display: flex;
+            gap: 5px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            border-radius: 4px 4px 0 0;
+        }
+        
+        .toolbar-btn {
+            background: none;
+            border: none;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 3px;
+            color: #555;
+        }
+        
+        .toolbar-btn:hover {
+            background-color: #e9ecef;
+        }
+        
+        .rich-text-editor {
+            min-height: 200px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 0 0 4px 4px;
+            background-color: white;
+        }
+        
+        /* Answer Styles */
+        .answers-section {
+            margin-top: 40px;
+        }
+        
+        .answers-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .answer-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            position: relative;
+        }
+        
+        .answer-card.accepted {
+            border-left: 4px solid var(--success);
+            background-color: #f8fff8;
+        }
+        
+        .accepted-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: var(--success);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .answer-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+        
+        .answer-author {
+            font-weight: 500;
+            color: var(--primary);
+        }
+        
+        .answer-body {
+            line-height: 1.7;
+            margin-bottom: 15px;
+        }
+        
+        .answer-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+        
+        .accept-btn {
+            background-color: var(--success);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        
+        .accept-btn:hover {
+            background-color: #27ae60;
+        }
+        
+        .accept-btn.accepted {
+            background-color: #7f8c8d;
+        }
+        
+        /* Notification Dropdown */
+        .notification-dropdown {
+            position: absolute;
+            top: 40px;
+            right: 0;
+            width: 350px;
+            max-height: 400px;
+            overflow-y: auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: none;
+        }
+        
+        .notification-dropdown.show {
+            display: block;
+        }
+        
+        .notification-header {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            font-weight: 600;
+        }
+        
+        .notification-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.3s;
+        }
+        
+        .notification-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .notification-item.unread {
+            background-color: #f0f7ff;
+        }
+        
+        .notification-text {
+            margin-bottom: 5px;
+        }
+        
+        .notification-time {
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .question-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .question-footer {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .notification-dropdown {
+                width: 280px;
+                right: -50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <i class="fas fa-layer-group"></i>
+                <span>StackIt</span>
+            </div>
+            
+<nav class="nav-links">
+                <a href="stackit.html">Home</a>
+                <a href="ask.html">Questions</a>
+                <a href="question.html">Tags</a>
+                <a href="users.html">Users</a>
+                <a href="login.html">Login in</a>
+            </nav>
+            
+            <div class="user-actions">
+                <div class="notification-bell" id="notificationBell">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-count">3</span>
+                    
+                    <div class="notification-dropdown" id="notificationDropdown">
+                        <div class="notification-header">Notifications</div>
+                        <div class="notification-item unread">
+                            <div class="notification-text">
+                                <strong>JohnDoe</strong> answered your question <a href="#">"How to center a div?"</a>
+                            </div>
+                            <div class="notification-time">10 minutes ago</div>
+                        </div>
+                        <div class="notification-item unread">
+                            <div class="notification-text">
+                                <strong>JaneSmith</strong> mentioned you in a comment
+                            </div>
+                            <div class="notification-time">1 hour ago</div>
+                        </div>
+                        <div class="notification-item">
+                            <div class="notification-text">
+                                <strong>DevGuru</strong> upvoted your answer
+                            </div>
+                            <div class="notification-time">2 days ago</div>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-primary">Sign up</button>
+            </div>
+        </div>
+    </header>
+    
+    <main class="container">
+        <div class="page-header">
+            <h1 class="page-title">All Questions</h1>
+            <button class="btn btn-primary">Ask Question</button>
+        </div>
+        
+        <div class="question-list">
+            <!-- Question 1 -->
+            <div class="question-card">
+                <div class="question-header">
+                    <div>
+                        <h2 class="question-title">How to center a div vertically and horizontally?</h2>
+                        <div class="question-meta">
+                            <span>Asked <span class="question-author">JaneSmith</span></span>
+                            <span>2 days ago</span>
+                            <span>Viewed 145 times</span>
+                        </div>
+                    </div>
+                    <div class="vote-controls">
+                        <button class="vote-btn upvoted"><i class="fas fa-arrow-up"></i></button>
+                        <span class="vote-count">12</span>
+                        <button class="vote-btn"><i class="fas fa-arrow-down"></i></button>
+                    </div>
+                </div>
+                
+                <div class="question-tags">
+                    <span class="tag">css</span>
+                    <span class="tag">html</span>
+                    <span class="tag">flexbox</span>
+                </div>
+                
+                <div class="question-body">
+                    I've been trying to center a div both vertically and horizontally on my page but nothing seems to work. I've tried using margin: auto but it only centers horizontally. What's the modern way to center elements in CSS?
+                </div>
+                
+                <div class="question-footer">
+                    <div class="answer-count">
+                        <i class="fas fa-comment-alt"></i>
+                        <span>3 answers</span>
+                    </div>
+                    <a href="#" class="btn btn-outline" style="color: var(--dark); border-color: #ddd;">View Answers</a>
+                </div>
+            </div>
+            
+            <!-- Question 2 -->
+            <div class="question-card">
+                <div class="question-header">
+                    <div>
+                        <h2 class="question-title">What's the difference between let, const and var in JavaScript?</h2>
+                        <div class="question-meta">
+                            <span>Asked <span class="question-author">CodeMaster</span></span>
+                            <span>5 days ago</span>
+                            <span>Viewed 342 times</span>
+                        </div>
+                    </div>
+                    <div class="vote-controls">
+                        <button class="vote-btn"><i class="fas fa-arrow-up"></i></button>
+                        <span class="vote-count">8</span>
+                        <button class="vote-btn downvoted"><i class="fas fa-arrow-down"></i></button>
+                    </div>
+                </div>
+                
+                <div class="question-tags">
+                    <span class="tag">javascript</span>
+                    <span class="tag">es6</span>
+                </div>
+                
+                <div class="question-body">
+                    I'm learning JavaScript and I see these three ways to declare variables. When should I use each one? Are there any performance differences between them?
+                </div>
+                
+                <div class="question-footer">
+                    <div class="answer-count">
+                        <i class="fas fa-comment-alt"></i>
+                        <span>5 answers</span>
+                    </div>
+                    <a href="#" class="btn btn-outline" style="color: var(--dark); border-color: #ddd;">View Answers</a>
+                </div>
+            </div>
+            
+            <!-- Question 3 -->
+            <div class="question-card">
+                <div class="question-header">
+                    <div>
+                        <h2 class="question-title">Best practices for React component structure</h2>
+                        <div class="question-meta">
+                            <span>Asked <span class="question-author">ReactDev</span></span>
+                            <span>1 week ago</span>
+                            <span>Viewed 521 times</span>
+                        </div>
+                    </div>
+                    <div class="vote-controls">
+                        <button class="vote-btn"><i class="fas fa-arrow-up"></i></button>
+                        <span class="vote-count">15</span>
+                        <button class="vote-btn"><i class="fas fa-arrow-down"></i></button>
+                    </div>
+                </div>
+                
+                <div class="question-tags">
+                    <span class="tag">react</span>
+                    <span class="tag">javascript</span>
+                    <span class="tag">frontend</span>
+                </div>
+                
+                <div class="question-body">
+                    I'm building a large React application and I'm not sure how to best organize my components. Should I keep all components in one folder? How do I structure shared components vs page-specific components? Any advice on folder structure would be helpful.
+                </div>
+                
+                <div class="question-footer">
+                    <div class="answer-count">
+                        <i class="fas fa-comment-alt"></i>
+                        <span>7 answers</span>
+                    </div>
+                    <a href="#" class="btn btn-outline" style="color: var(--dark); border-color: #ddd;">View Answers</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Ask Question Form (Hidden by default) -->
+        <div id="askForm" style="display: none;">
+            <div class="ask-form">
+                <h2>Ask a Question</h2>
+                <form>
+                    <div class="form-group">
+                        <label for="questionTitle" class="form-label">Title</label>
+                        <input type="text" id="questionTitle" class="form-control" placeholder="What's your question? Be specific.">
+                        <small>Imagine you're asking a question to another person.</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="questionBody" class="form-label">Body</label>
+                        <div class="rich-text-toolbar">
+                            <button type="button" class="toolbar-btn" title="Bold"><i class="fas fa-bold"></i></button>
+                            <button type="button" class="toolbar-btn" title="Italic"><i class="fas fa-italic"></i></button>
+                            <button type="button" class="toolbar-btn" title="Strikethrough"><i class="fas fa-strikethrough"></i></button>
+                            <button type="button" class="toolbar-btn" title="Numbered List"><i class="fas fa-list-ol"></i></button>
+                            <button type="button" class="toolbar-btn" title="Bullet List"><i class="fas fa-list-ul"></i></button>
+                            <button type="button" class="toolbar-btn" title="Link"><i class="fas fa-link"></i></button>
+                            <button type="button" class="toolbar-btn" title="Image"><i class="fas fa-image"></i></button>
+                            <button type="button" class="toolbar-btn" title="Emoji"><i class="far fa-smile"></i></button>
+                        </div>
+                        <div class="rich-text-editor" id="questionBody" contenteditable="true">
+                            <p>Enter the details of your question here...</p>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="questionTags" class="form-label">Tags</label>
+                        <div class="tag-input-container">
+                            <span class="tag">javascript</span>
+                            <span class="tag">css</span>
+                            <input type="text" class="tag-input" id="questionTags" placeholder="Add tags...">
+                        </div>
+                        <small>Add up to 5 tags to describe what your question is about.</small>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Post Your Question</button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Question Detail Page (Hidden by default) -->
+        <div id="questionDetail" style="display: none;">
+            <div class="question-card">
+                <div class="question-header">
+                    <div>
+                        <h2 class="question-title">How to center a div vertically and horizontally?</h2>
+                        <div class="question-meta">
+                            <span>Asked <span class="question-author">JaneSmith</span></span>
+                            <span>2 days ago</span>
+                            <span>Modified yesterday</span>
+                            <span>Viewed 145 times</span>
+                        </div>
+                    </div>
+                    <div class="vote-controls">
+                        <button class="vote-btn upvoted"><i class="fas fa-arrow-up"></i></button>
+                        <span class="vote-count">12</span>
+                        <button class="vote-btn"><i class="fas fa-arrow-down"></i></button>
+                    </div>
+                </div>
+                
+                <div class="question-tags">
+                    <span class="tag">css</span>
+                    <span class="tag">html</span>
+                    <span class="tag">flexbox</span>
+                </div>
+                
+                <div class="question-body">
+                    <p>I've been trying to center a div both vertically and horizontally on my page but nothing seems to work. I've tried using margin: auto but it only centers horizontally. What's the modern way to center elements in CSS?</p>
+                    <p>Here's my current code:</p>
+                    <pre><code>.container {
+    width: 200px;
+    height: 200px;
+    margin: auto;
+    background: #f0f0f0;
+}</code></pre>
+                    <p>This centers the div horizontally but not vertically. How can I achieve both?</p>
+                </div>
+                
+                <div class="question-footer">
+                    <div class="answer-count">
+                        <i class="fas fa-comment-alt"></i>
+                        <span>3 answers</span>
+                    </div>
+                    <button class="btn btn-primary">Add Your Answer</button>
+                </div>
+            </div>
+            
+            <div class="answers-section">
+                <div class="answers-header">
+                    <h3>3 Answers</h3>
+                    <div>
+                        <span>Sorted by: </span>
+                        <select class="form-control" style="display: inline-block; width: auto;">
+                            <option>Highest score</option>
+                            <option>Oldest</option>
+                            <option>Newest</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Answer 1 -->
+                <div class="answer-card accepted">
+                    <div class="accepted-badge">Accepted</div>
+                    <div class="answer-meta">
+                        <span>Answered by <span class="answer-author">CSSWizard</span></span>
+                        <span>1 day ago</span>
+                    </div>
+                    <div class="answer-body">
+                        <p>There are several modern ways to center a div both vertically and horizontally:</p>
+                        <ol>
+                            <li><strong>Using Flexbox</strong> (recommended for modern browsers):</li>
+                        </ol>
+                        <pre><code>.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.centered-div {
+    width: 200px;
+    height: 200px;
+}</code></pre>
+                        <ol start="2">
+                            <li><strong>Using CSS Grid</strong>:</li>
+                        </ol>
+                        <pre><code>.container {
+    display: grid;
+    place-items: center;
+    height: 100vh;
+}</code></pre>
+                        <ol start="3">
+                            <li><strong>Using position and transform</strong> (works in older browsers):</li>
+                        </ol>
+                        <pre><code>.centered-div {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}</code></pre>
+                        <p>Flexbox is generally the most straightforward solution for modern web development.</p>
+                    </div>
+                    <div class="answer-actions">
+                        <div class="vote-controls">
+                            <button class="vote-btn upvoted"><i class="fas fa-arrow-up"></i></button>
+                            <span class="vote-count">24</span>
+                            <button class="vote-btn"><i class="fas fa-arrow-down"></i></button>
+                        </div>
+                        <button class="accept-btn accepted">Accepted</button>
+                    </div>
+                </div>
+                
+                <!-- Answer 2 -->
+                <div class="answer-card">
+                    <div class="answer-meta">
+                        <span>Answered by <span class="answer-author">FrontendDev</span></span>
+                        <span>20 hours ago</span>
+                    </div>
+                    <div class="answer-body">
+                        <p>Another approach is to use <code>margin: auto</code> with Flexbox:</p>
+                        <pre><code>.centered-div {
+    margin: auto;
+    width: 200px;
+    height: 200px;
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    margin: 0;
+}</code></pre>
+                        <p>This works because in a flex container, <code>margin: auto</code> works for both directions.</p>
+                    </div>
+                    <div class="answer-actions">
+                        <div class="vote-controls">
+                            <button class="vote-btn"><i class="fas fa-arrow-up"></i></button>
+                            <span class="vote-count">5</span>
+                            <button class="vote-btn"><i class="fas fa-arrow-down"></i></button>
+                        </div>
+                        <button class="accept-btn">Accept Answer</button>
+                    </div>
+                </div>
+                
+                <!-- Answer 3 -->
+                <div class="answer-card">
+                    <div class="answer-meta">
+                        <span>Answered by <span class="answer-author">WebDesigner</span></span>
+                        <span>5 hours ago</span>
+                    </div>
+                    <div class="answer-body">
+                        <p>Don't forget about the classic table-cell method if you need to support really old browsers:</p>
+                        <pre><code>.container {
+    display: table;
+    width: 100%;
+    height: 100vh;
+}
+
+.centered-div {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.inner-div {
+    display: inline-block;
+    width: 200px;
+    height: 200px;
+}</code></pre>
+                        <p>This method is a bit more verbose but has excellent browser support.</p>
+                    </div>
+                    <div class="answer-actions">
+                        <div class="vote-controls">
+                            <button class="vote-btn"><i class="fas fa-arrow-up"></i></button>
+                            <span class="vote-count">2</span>
+                            <button class="vote-btn"><i class="fas fa-arrow-down"></i></button>
+                        </div>
+                        <button class="accept-btn">Accept Answer</button>
+                    </div>
+                </div>
+                
+                <!-- Your Answer Form -->
+                <div class="ask-form">
+                    <h3>Your Answer</h3>
+                    <form>
+                        <div class="form-group">
+                            <div class="rich-text-toolbar">
+                                <button type="button" class="toolbar-btn" title="Bold"><i class="fas fa-bold"></i></button>
+                                <button type="button" class="toolbar-btn" title="Italic"><i class="fas fa-italic"></i></button>
+                                <button type="button" class="toolbar-btn" title="Strikethrough"><i class="fas fa-strikethrough"></i></button>
+                                <button type="button" class="toolbar-btn" title="Numbered List"><i class="fas fa-list-ol"></i></button>
+                                <button type="button" class="toolbar-btn" title="Bullet List"><i class="fas fa-list-ul"></i></button>
+                                <button type="button" class="toolbar-btn" title="Link"><i class="fas fa-link"></i></button>
+                                <button type="button" class="toolbar-btn" title="Image"><i class="fas fa-image"></i></button>
+                                <button type="button" class="toolbar-btn" title="Emoji"><i class="far fa-smile"></i></button>
+                            </div>
+                            <div class="rich-text-editor" id="yourAnswer" contenteditable="true">
+                                <p>Write your answer here...</p>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Post Your Answer</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <script>
+        // Toggle notification dropdown
+        document.getElementById('notificationBell').addEventListener('click', function(e) {
+            e.stopPropagation();
+            document.getElementById('notificationDropdown').classList.toggle('show');
+        });
+        
+        // Close dropdown when clicking elsewhere
+        window.addEventListener('click', function() {
+            document.getElementById('notificationDropdown').classList.remove('show');
+        });
+        
+        // Simple voting functionality
+        document.querySelectorAll('.vote-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const isUpvote = this.querySelector('.fa-arrow-up');
+                const isDownvote = this.querySelector('.fa-arrow-down');
+                const voteCount = this.parentElement.querySelector('.vote-count');
+                
+                if (isUpvote) {
+                    this.classList.toggle('upvoted');
+                    // Remove downvoted from sibling if exists
+                    const downvoteBtn = this.parentElement.querySelector('.fa-arrow-down').parentElement;
+                    if (downvoteBtn.classList.contains('downvoted')) {
+                        downvoteBtn.classList.remove('downvoted');
+                    }
+                } else if (isDownvote) {
+                    this.classList.toggle('downvoted');
+                    // Remove upvoted from sibling if exists
+                    const upvoteBtn = this.parentElement.querySelector('.fa-arrow-up').parentElement;
+                    if (upvoteBtn.classList.contains('upvoted')) {
+                        upvoteBtn.classList.remove('upvoted');
+                    }
+                }
+                
+                // Update vote count (simplified for demo)
+                if (this.classList.contains('upvoted')) {
+                    voteCount.textContent = parseInt(voteCount.textContent) + 1;
+                } else if (this.classList.contains('downvoted')) {
+                    voteCount.textContent = parseInt(voteCount.textContent) - 1;
+                }
+            });
+        });
+        
+        // Accept answer functionality
+        document.querySelectorAll('.accept-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (!this.classList.contains('accepted')) {
+                    // Remove accepted from any other answer
+                    document.querySelectorAll('.accept-btn').forEach(otherBtn => {
+                        otherBtn.classList.remove('accepted');
+                        otherBtn.textContent = 'Accept Answer';
+                        otherBtn.closest('.answer-card').classList.remove('accepted');
+                        const badge = otherBtn.closest('.answer-card').querySelector('.accepted-badge');
+                        if (badge) badge.remove();
+                    });
+                    
+                    // Mark this answer as accepted
+                    this.classList.add('accepted');
+                    this.textContent = 'Accepted';
+                    const answerCard = this.closest('.answer-card');
+                    answerCard.classList.add('accepted');
+                    
+                    // Add accepted badge if not exists
+                    if (!answerCard.querySelector('.accepted-badge')) {
+                        const badge = document.createElement('div');
+                        badge.className = 'accepted-badge';
+                        badge.textContent = 'Accepted';
+                        answerCard.prepend(badge);
+                    }
+                }
+            });
+        });
+        
+        // Simulate navigation (for demo purposes)
+        document.querySelectorAll('.question-title, .btn-outline').forEach(el => {
+            el.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.getElementById('askForm').style.display = 'none';
+                document.querySelector('.question-list').style.display = 'none';
+                document.querySelector('.page-title').textContent = this.textContent;
+                document.getElementById('questionDetail').style.display = 'block';
+            });
+        });
+        
+        document.querySelector('.btn-primary').addEventListener('click', function(e) {
+            if (this.textContent === 'Ask Question') {
+                e.preventDefault();
+                document.getElementById('askForm').style.display = 'block';
+                document.querySelector('.question-list').style.display = 'none';
+                document.querySelector('.page-title').textContent = 'Ask a Question';
+                document.getElementById('questionDetail').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
